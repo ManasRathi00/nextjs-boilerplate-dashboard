@@ -6,7 +6,10 @@ import {
   Inbox,
   Search,
   Settings,
+  Aperture,
+  ArrowDownFromLine,
   User2,
+  ChevronsUpDown,
 } from "lucide-react";
 
 import {
@@ -33,7 +36,23 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "../ui/collapsible";
+import { Tooltip } from "../ui/tooltip";
+import { TooltipContent, TooltipTrigger } from "@radix-ui/react-tooltip";
 
+const sideBarHeader = {
+  currentWorkSpace: "ACME Inc",
+  workpaceLogo: Aperture,
+  options: [
+    {
+      workspaceName: "ACME Org",
+      workspaceLogo: ArrowDownFromLine,
+    },
+    {
+      workspaceName: "Evil Org",
+      workspaceLogo: Inbox,
+    },
+  ],
+};
 // Menu items.
 const items = [
   {
@@ -71,18 +90,23 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <SidebarMenuButton>
-                  Select Workspace
-                  <ChevronDown className="ml-auto" />
+                <SidebarMenuButton className="">
+                  <sideBarHeader.workpaceLogo />
+
+                  <span>{sideBarHeader.currentWorkSpace}</span>
+                  <ChevronsUpDown className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-[--radix-popper-anchor-width]">
-                <DropdownMenuItem>
-                  <span>Acme Inc</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <span>Acme Corp.</span>
-                </DropdownMenuItem>
+              <DropdownMenuContent side="right">
+                {sideBarHeader.options.map((workspace) => {
+                  console.log(workspace);
+                  return (
+                    <DropdownMenuItem key={workspace.workspaceName}>
+                      <workspace.workspaceLogo />
+                      <span>{workspace.workspaceName}</span>
+                    </DropdownMenuItem>
+                  );
+                })}
               </DropdownMenuContent>
             </DropdownMenu>
           </SidebarMenuItem>
@@ -95,15 +119,23 @@ export function AppSidebar() {
             <SidebarMenu>
               {items.map((item, index) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={index == 0 ? true : false}
-                  >
-                    <a href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <SidebarMenuButton asChild isActive={index === 0}>
+                        <a href={item.url} className="flex items-center gap-2">
+                          <item.icon />
+                          <span>{item.title}</span>
+                        </a>
+                      </SidebarMenuButton>
+                    </TooltipTrigger>
+
+                    <TooltipContent
+                      side="right"
+                      className="bg-background text-foreground px-3 py-2 rounded-md shadow-lg text-sm font-medium border border-muted"
+                    >
+                      {item.title}
+                    </TooltipContent>
+                  </Tooltip>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
@@ -118,7 +150,23 @@ export function AppSidebar() {
               </CollapsibleTrigger>
             </SidebarGroupLabel>
             <CollapsibleContent>
-              <SidebarGroupContent />
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {items.map((item, index) => (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={index == 0 ? true : false}
+                      >
+                        <a href={item.url}>
+                          <item.icon />
+                          <span>{item.title}</span>
+                        </a>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
             </CollapsibleContent>
           </SidebarGroup>
         </Collapsible>
