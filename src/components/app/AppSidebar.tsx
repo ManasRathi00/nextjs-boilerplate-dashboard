@@ -132,26 +132,20 @@ export function AppSidebar() {
   // Helper function to check if a collapsible section should be open
 
   return (
-    <Sidebar
-      collapsible="icon"
-      variant="floating"
-      className="bg-background border-r"
-    >
+    <Sidebar collapsible="icon" variant="floating">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <SidebarMenuButton className="h-12 hover:bg-accent/50 flex items-center gap-3 px-3 flex-shrink-0">
+                <SidebarMenuButton className="h-12 flex items-center gap-3 px-3 flex-shrink-0">
                   <sideBarHeader.workpaceLogo />
 
                   <div className="flex flex-col items-start flex-shrink-0">
                     <span className="text-sm font-semibold">
                       {sideBarHeader.currentWorkSpace}
                     </span>
-                    <span className="text-xs text-muted-foreground">
-                      Workspace
-                    </span>
+                    <span className="text-xs">Workspace</span>
                   </div>
 
                   <ChevronsUpDown className="ml-auto h-4 w-4 flex-shrink-0" />
@@ -307,15 +301,13 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <SidebarMenuButton className="h-10 hover:bg-accent/50">
+                <SidebarMenuButton className="h-10">
                   <div className="flex h-6 w-6 items-center justify-center rounded-full bg-muted">
                     <User2 className="h-3 w-3" />
                   </div>
                   <div className="flex flex-col items-start">
                     <span className="text-sm font-medium">Username</span>
-                    <span className="text-xs text-muted-foreground">
-                      user@example.com
-                    </span>
+                    <span className="text-xs">user@example.com</span>
                   </div>
                   <ChevronUp className="ml-auto h-4 w-4" />
                 </SidebarMenuButton>
