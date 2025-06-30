@@ -10,7 +10,11 @@ import {
   ArrowDownFromLine,
   User2,
   ChevronsUpDown,
+  HelpCircle,
+  FileText,
+  MessageSquare,
 } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 import {
   Sidebar,
@@ -53,116 +57,242 @@ const sideBarHeader = {
     },
   ],
 };
-// Menu items.
+
+// Menu items with proper URLs
 const items = [
   {
-    title: "Home",
-    url: "#",
+    title: "Dashboard",
     icon: Home,
+    isCollapsible: true,
+    subItems: [
+      {
+        title: "Overview",
+        url: "/dashboard",
+        icon: Home,
+      },
+      {
+        title: "Analytics",
+        url: "/dashboard/analytics",
+        icon: Aperture,
+      },
+      {
+        title: "Settings",
+        url: "/dashboard/settings",
+        icon: Settings,
+      },
+    ],
   },
   {
     title: "Inbox",
-    url: "#",
+    url: "/inbox",
     icon: Inbox,
+    isCollapsible: false,
   },
   {
     title: "Calendar",
-    url: "#",
+    url: "/calendar",
     icon: Calendar,
+    isCollapsible: false,
   },
   {
     title: "Search",
-    url: "#",
+    url: "/search",
     icon: Search,
+    isCollapsible: false,
+  },
+];
+
+// Help section items
+const helpItems = [
+  {
+    title: "Documentation",
+    url: "/help/docs",
+    icon: FileText,
   },
   {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
+    title: "Support",
+    url: "/help/support",
+    icon: MessageSquare,
+  },
+  {
+    title: "FAQ",
+    url: "/help/faq",
+    icon: HelpCircle,
   },
 ];
 
 export function AppSidebar() {
+  const pathname = usePathname();
+
+  // Helper function to check if a path is active
+  const isPathActive = (path: string | undefined) => {
+    return pathname === path;
+  };
+
+  // Helper function to check if a collapsible section should be open
+
   return (
-    <Sidebar collapsible="icon" className="bg--primary">
+    <Sidebar
+      collapsible="icon"
+      variant="floating"
+      className="bg-background border-r"
+    >
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <SidebarMenuButton className="">
+                <SidebarMenuButton className="h-12 hover:bg-accent/50 flex items-center gap-3 px-3 flex-shrink-0">
                   <sideBarHeader.workpaceLogo />
 
-                  <span>{sideBarHeader.currentWorkSpace}</span>
-                  <ChevronsUpDown className="ml-auto" />
+                  <div className="flex flex-col items-start flex-shrink-0">
+                    <span className="text-sm font-semibold">
+                      {sideBarHeader.currentWorkSpace}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      Workspace
+                    </span>
+                  </div>
+
+                  <ChevronsUpDown className="ml-auto h-4 w-4 flex-shrink-0" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
-              <DropdownMenuContent side="right">
-                {sideBarHeader.options.map((workspace) => {
-                  console.log(workspace);
-                  return (
-                    <DropdownMenuItem key={workspace.workspaceName}>
-                      <workspace.workspaceLogo />
-                      <span>{workspace.workspaceName}</span>
-                    </DropdownMenuItem>
-                  );
-                })}
+              <DropdownMenuContent side="right" className="w-64">
+                {sideBarHeader.options.map((workspace) => (
+                  <DropdownMenuItem
+                    key={workspace.workspaceName}
+                    className="gap-2"
+                  >
+                    <div className="flex h-6 w-6 items-center justify-center rounded bg-muted">
+                      <workspace.workspaceLogo className="h-3 w-3" />
+                    </div>
+                    <span>{workspace.workspaceName}</span>
+                  </DropdownMenuItem>
+                ))}
               </DropdownMenuContent>
             </DropdownMenu>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
+
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item, index) => (
-                <SidebarMenuItem key={item.title}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <SidebarMenuButton asChild isActive={index === 0}>
-                        <a href={item.url} className="flex items-center gap-2">
-                          <item.icon />
+              {items.map((item) =>
+                item.isCollapsible ? (
+                  <Collapsible
+                    key={item.title}
+                    defaultOpen
+                    className="group/collapsible"
+                  >
+                    <SidebarMenuItem>
+                      <CollapsibleTrigger asChild>
+                        <SidebarMenuButton className="flex items-center gap-2 w-full">
+                          <item.icon className="h-4 w-4" />
                           <span>{item.title}</span>
-                        </a>
-                      </SidebarMenuButton>
-                    </TooltipTrigger>
-
-                    <TooltipContent
-                      side="right"
-                      className="bg-background text-foreground px-3 py-2 rounded-md shadow-lg text-sm font-medium border border-muted"
-                    >
-                      {item.title}
-                    </TooltipContent>
-                  </Tooltip>
-                </SidebarMenuItem>
-              ))}
+                          <ChevronDown className="ml-auto h-4 w-4 transition-transform group-data-[state=open]/collapsible:rotate-180" />
+                        </SidebarMenuButton>
+                      </CollapsibleTrigger>
+                    </SidebarMenuItem>
+                    <CollapsibleContent>
+                      {item.subItems &&
+                        item.subItems.map((subItem) => (
+                          <SidebarMenuItem key={subItem.title}>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <SidebarMenuButton
+                                  asChild
+                                  isActive={isPathActive(subItem.url)}
+                                  className="pl-8"
+                                >
+                                  <a
+                                    href={subItem.url}
+                                    className="flex items-center gap-2"
+                                  >
+                                    <subItem.icon className="h-4 w-4" />
+                                    <span>{subItem.title}</span>
+                                  </a>
+                                </SidebarMenuButton>
+                              </TooltipTrigger>
+                              <TooltipContent
+                                side="right"
+                                className="bg-popover text-popover-foreground px-3 py-2 rounded-md shadow-lg text-sm font-medium border"
+                              >
+                                {subItem.title}
+                              </TooltipContent>
+                            </Tooltip>
+                          </SidebarMenuItem>
+                        ))}
+                    </CollapsibleContent>
+                  </Collapsible>
+                ) : (
+                  <SidebarMenuItem key={item.title}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <SidebarMenuButton
+                          asChild
+                          isActive={isPathActive(item.url)}
+                        >
+                          <a
+                            href={item.url}
+                            className="flex items-center gap-2"
+                          >
+                            <item.icon className="h-4 w-4" />
+                            <span>{item.title}</span>
+                          </a>
+                        </SidebarMenuButton>
+                      </TooltipTrigger>
+                      <TooltipContent
+                        side="right"
+                        className="bg-popover text-popover-foreground px-3 py-2 rounded-md shadow-lg text-sm font-medium border"
+                      >
+                        {item.title}
+                      </TooltipContent>
+                    </Tooltip>
+                  </SidebarMenuItem>
+                )
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        <Collapsible defaultOpen className="group/collapsible">
+
+        <Collapsible defaultOpen={true} className="group/collapsible">
           <SidebarGroup>
             <SidebarGroupLabel asChild>
-              <CollapsibleTrigger>
-                Help
-                <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
+              <CollapsibleTrigger className="hover:bg-accent/50 rounded transition-colors">
+                Help & Support
+                <ChevronDown className="ml-auto h-4 w-4 transition-transform group-data-[state=open]/collapsible:rotate-180" />
               </CollapsibleTrigger>
             </SidebarGroupLabel>
             <CollapsibleContent>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {items.map((item, index) => (
+                  {helpItems.map((item) => (
                     <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton
-                        asChild
-                        isActive={index == 0 ? true : false}
-                      >
-                        <a href={item.url}>
-                          <item.icon />
-                          <span>{item.title}</span>
-                        </a>
-                      </SidebarMenuButton>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <SidebarMenuButton
+                            asChild
+                            isActive={isPathActive(item.url)}
+                          >
+                            <a
+                              href={item.url}
+                              className="flex items-center gap-2"
+                            >
+                              <item.icon className="h-4 w-4" />
+                              <span>{item.title}</span>
+                            </a>
+                          </SidebarMenuButton>
+                        </TooltipTrigger>
+                        <TooltipContent
+                          side="right"
+                          className="bg-popover text-popover-foreground px-3 py-2 rounded-md shadow-lg text-sm font-medium border"
+                        >
+                          {item.title}
+                        </TooltipContent>
+                      </Tooltip>
                     </SidebarMenuItem>
                   ))}
                 </SidebarMenu>
@@ -171,18 +301,28 @@ export function AppSidebar() {
           </SidebarGroup>
         </Collapsible>
       </SidebarContent>
+
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <SidebarMenuButton>
-                  <User2 /> Username
-                  <ChevronUp className="ml-auto" />
+                <SidebarMenuButton className="h-10 hover:bg-accent/50">
+                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-muted">
+                    <User2 className="h-3 w-3" />
+                  </div>
+                  <div className="flex flex-col items-start">
+                    <span className="text-sm font-medium">Username</span>
+                    <span className="text-xs text-muted-foreground">
+                      user@example.com
+                    </span>
+                  </div>
+                  <ChevronUp className="ml-auto h-4 w-4" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                side="top"
+                side="right"
+                align="end"
                 className="w-[--radix-popper-anchor-width]"
               >
                 <DropdownMenuItem>
