@@ -138,17 +138,19 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <SidebarMenuButton className="h-12 flex items-center gap-3 px-3 flex-shrink-0">
-                  <sideBarHeader.workpaceLogo />
-
-                  <div className="flex flex-col items-start flex-shrink-0">
-                    <span className="text-sm font-semibold">
+                <SidebarMenuButton
+                  size="lg"
+                  className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                >
+                  <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+                    <sideBarHeader.workpaceLogo className="size-4" />
+                  </div>
+                  <div className="grid flex-1 text-left text-sm leading-tight">
+                    <span className="truncate font-semibold">
                       {sideBarHeader.currentWorkSpace}
                     </span>
-                    <span className="text-xs">Workspace</span>
                   </div>
-
-                  <ChevronsUpDown className="ml-auto h-4 w-4 flex-shrink-0" />
+                  <ChevronsUpDown className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent side="right" className="w-64">
