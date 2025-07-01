@@ -26,7 +26,11 @@ const AppNavbar = () => {
       {/* Right: Search, Theme Toggle, Profile */}
       <div className="flex items-center gap-x-3">
         {/* Global Search Input */}
-        <Input type="text" placeholder="Search..." className="w-48" />
+        <Input
+          type="text"
+          placeholder="Search..."
+          className="w-48 hidden sm:inline-block"
+        />
         {/* Theme Toggle */}
         <ThemeToggle />
         {/* User Profile Dropdown */}
