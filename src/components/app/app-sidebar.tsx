@@ -9,6 +9,7 @@ import {
   ChevronsUpDown,
   Settings,
   FileText,
+  UserLock,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 
@@ -94,7 +95,7 @@ const authGroup = {
     {
       title: "Login",
       url: "/login",
-      icon: User2,
+      icon: UserLock,
     },
   ],
 };
