@@ -1,18 +1,14 @@
 import {
-  Calendar,
   ChevronDown,
   ChevronUp,
   Home,
   Inbox,
-  Search,
-  Settings,
   Aperture,
   ArrowDownFromLine,
   User2,
   ChevronsUpDown,
-  HelpCircle,
+  Settings,
   FileText,
-  MessageSquare,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 
@@ -62,74 +58,55 @@ const sideBarHeader = {
 const items = [
   {
     title: "Dashboard",
+    url: "/dashboard",
     icon: Home,
-    isCollapsible: true,
-    subItems: [
-      {
-        title: "Overview",
-        url: "/dashboard",
-        icon: Home,
-      },
-      {
-        title: "Analytics",
-        url: "/dashboard/analytics",
-        icon: Aperture,
-      },
-      {
-        title: "Settings",
-        url: "/dashboard/settings",
-        icon: Settings,
-      },
-    ],
+    isCollapsible: false,
   },
   {
-    title: "Inbox",
-    url: "/inbox",
+    title: "Tasks",
+    url: "/dashboard/tasks",
     icon: Inbox,
     isCollapsible: false,
   },
   {
-    title: "Calendar",
-    url: "/calendar",
-    icon: Calendar,
+    title: "Settings",
+    url: "/",
+    icon: Settings,
     isCollapsible: false,
   },
   {
-    title: "Search",
-    url: "/search",
-    icon: Search,
+    title: "Reports",
+    url: "/",
+    icon: FileText,
     isCollapsible: false,
   },
 ];
 
-// Help section items
-const helpItems = [
-  {
-    title: "Documentation",
-    url: "/help/docs",
-    icon: FileText,
-  },
-  {
-    title: "Support",
-    url: "/help/support",
-    icon: MessageSquare,
-  },
-  {
-    title: "FAQ",
-    url: "/help/faq",
-    icon: HelpCircle,
-  },
-];
+/** Auth section items */
+const authGroup = {
+  title: "Auth",
+  items: [
+    {
+      title: "Sign up",
+      url: "/signup",
+      icon: User2,
+    },
+    {
+      title: "Login",
+      url: "/login",
+      icon: User2,
+    },
+  ],
+};
 
 export function AppSidebar() {
   const pathname = usePathname();
 
   // Helper function to check if a path is active
   const isPathActive = (path: string | undefined) => {
+    if (!path) return false;
     return pathname === path;
   };
-
-  // Helper function to check if a collapsible section should be open
 
   return (
     <Sidebar collapsible="icon" variant="floating">
@@ -176,102 +153,53 @@ export function AppSidebar() {
           <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) =>
-                item.isCollapsible ? (
-                  <Collapsible
-                    key={item.title}
-                    defaultOpen
-                    className="group/collapsible"
-                  >
-                    <SidebarMenuItem>
-                      <CollapsibleTrigger asChild>
-                        <SidebarMenuButton className="flex items-center gap-2 w-full">
+              {items.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={isPathActive(item.url)}
+                      >
+                        <a href={item.url} className="flex items-center gap-2">
                           <item.icon className="h-4 w-4" />
                           <span>{item.title}</span>
-                          <ChevronDown className="ml-auto h-4 w-4 transition-transform group-data-[state=open]/collapsible:rotate-180" />
-                        </SidebarMenuButton>
-                      </CollapsibleTrigger>
-                    </SidebarMenuItem>
-                    <CollapsibleContent>
-                      {item.subItems &&
-                        item.subItems.map((subItem) => (
-                          <SidebarMenuItem key={subItem.title}>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <SidebarMenuButton
-                                  asChild
-                                  isActive={isPathActive(subItem.url)}
-                                  className="pl-8"
-                                >
-                                  <a
-                                    href={subItem.url}
-                                    className="flex items-center gap-2"
-                                  >
-                                    <subItem.icon className="h-4 w-4" />
-                                    <span>{subItem.title}</span>
-                                  </a>
-                                </SidebarMenuButton>
-                              </TooltipTrigger>
-                              <TooltipContent
-                                side="right"
-                                className="bg-popover text-popover-foreground px-3 py-2 rounded-md shadow-lg text-sm font-medium border"
-                              >
-                                {subItem.title}
-                              </TooltipContent>
-                            </Tooltip>
-                          </SidebarMenuItem>
-                        ))}
-                    </CollapsibleContent>
-                  </Collapsible>
-                ) : (
-                  <SidebarMenuItem key={item.title}>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <SidebarMenuButton
-                          asChild
-                          isActive={isPathActive(item.url)}
-                        >
-                          <a
-                            href={item.url}
-                            className="flex items-center gap-2"
-                          >
-                            <item.icon className="h-4 w-4" />
-                            <span>{item.title}</span>
-                          </a>
-                        </SidebarMenuButton>
-                      </TooltipTrigger>
-                      <TooltipContent
-                        side="right"
-                        className="bg-popover text-popover-foreground px-3 py-2 rounded-md shadow-lg text-sm font-medium border"
-                      >
-                        {item.title}
-                      </TooltipContent>
-                    </Tooltip>
-                  </SidebarMenuItem>
-                )
-              )}
+                        </a>
+                      </SidebarMenuButton>
+                    </TooltipTrigger>
+                    <TooltipContent
+                      side="right"
+                      className="bg-popover text-popover-foreground px-3 py-2 rounded-md shadow-lg text-sm font-medium border"
+                    >
+                      {item.title}
+                    </TooltipContent>
+                  </Tooltip>
+                </SidebarMenuItem>
+              ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
 
+        {/* Collapsible group for Auth - now default open with better styling */}
         <Collapsible defaultOpen={true} className="group/collapsible">
           <SidebarGroup>
             <SidebarGroupLabel asChild>
-              <CollapsibleTrigger className="hover:bg-accent/50 rounded transition-colors">
-                Help & Support
+              <CollapsibleTrigger className="hover:bg-accent/50 rounded transition-colors flex items-center w-full">
+                {authGroup.title}
                 <ChevronDown className="ml-auto h-4 w-4 transition-transform group-data-[state=open]/collapsible:rotate-180" />
               </CollapsibleTrigger>
             </SidebarGroupLabel>
             <CollapsibleContent>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {helpItems.map((item) => (
+                  {authGroup.items.map((item) => (
                     <SidebarMenuItem key={item.title}>
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <SidebarMenuButton
+                            className="pl-4"
                             asChild
-                            isActive={isPathActive(item.url)}
+                            isActive={isPathActive(item.url)} // Added indentation for subitems
                           >
                             <a
                               href={item.url}

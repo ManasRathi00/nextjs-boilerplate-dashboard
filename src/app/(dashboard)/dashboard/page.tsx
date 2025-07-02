@@ -17,7 +17,7 @@ import { RecentSales } from "@/components/app/dashboard//recent-sales";
 
 export const metadata: Metadata = {
   title: "Dashboard",
-  description: "Example dashboard app built using the components.",
+  description: "Example dashboard",
 };
 
 export default function DashboardPage() {
