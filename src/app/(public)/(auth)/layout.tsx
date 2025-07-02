@@ -14,7 +14,7 @@ export default function PublicLayout({
   return (
     <div className="h-full w-screen flex">
       {/* Left Side */}
-      <div className="hidden md:flex flex-col flex-1 bg-secondary shrink-0 relative overflow-hidden">
+      <div className="hidden md:flex flex-col flex-1 bg-muted shrink-0 relative overflow-hidden">
         {/* Logo & Company Name */}
         <div className="flex gap-2 items-center mt-6 ml-8 text-2xl font-semibold text-primary">
           <Aperture className="w-7 h-7" />
