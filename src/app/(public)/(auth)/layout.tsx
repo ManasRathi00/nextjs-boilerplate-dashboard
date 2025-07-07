@@ -5,12 +5,16 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import TestimonialCards from "@/components/app/testimonial-cards";
+import { auth, signIn } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-export default function PublicLayout({
+export default async function PublicLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await auth();
+  if (session) redirect("/dashboard");
   return (
     <div className="h-full w-screen flex">
       {/* Left Side */}
@@ -42,21 +46,28 @@ export default function PublicLayout({
             </span>
             <Separator className="flex-1" />
           </div>
-          <Button
-            variant="outline"
-            className="w-full flex items-center justify-center gap-2"
-            type="button"
-            // TODO: Add onClick handler for Google OAuth
+          <form
+            action={async () => {
+              "use server";
+              await signIn("github");
+            }}
           >
-            <Image
-              src="/icons/google.svg"
-              alt="Github"
-              width={0}
-              height={0}
-              className="w-5 h-5"
-            />
-            Continue with Github
-          </Button>
+            <Button
+              variant="outline"
+              className="w-full flex items-center justify-center gap-2"
+              type="submit"
+              // TODO: Add onClick handler for Google OAuth
+            >
+              <Image
+                src="/icons/github.svg"
+                alt="Github"
+                width={0}
+                height={0}
+                className="w-5 h-5"
+              />
+              Continue with Github
+            </Button>
+          </form>
         </div>
       </div>
     </div>

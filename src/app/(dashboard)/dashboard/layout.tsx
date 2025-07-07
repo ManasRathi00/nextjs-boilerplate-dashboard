@@ -1,14 +1,17 @@
-"use client";
-
 import React from "react";
 import AppNavbar from "@/components/app/app-navbar";
 import { AppSidebar } from "@/components/app/app-sidebar";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await auth();
+  if (!session) redirect("/login");
+
   return (
     <>
       <AppSidebar />

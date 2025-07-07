@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Eye, EyeOff } from "lucide-react";
+import { signIn } from "next-auth/react";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
@@ -19,7 +20,7 @@ export default function LoginForm() {
     setSuccess(false);
 
     // Mock API: randomize success/error
-    await new Promise((r) => setTimeout(r, 1200));
+    await signIn("credentials", { email, password });
     if (email === "fail@example.com" || password === "fail") {
       setError("Invalid email or password.");
       setLoading(false);

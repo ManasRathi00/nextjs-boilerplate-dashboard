@@ -1,3 +1,4 @@
+"use client";
 import {
   ChevronDown,
   ChevronUp,
@@ -39,6 +40,7 @@ import {
 } from "../ui/collapsible";
 import { Tooltip } from "../ui/tooltip";
 import { TooltipContent, TooltipTrigger } from "@radix-ui/react-tooltip";
+import { signOut } from "next-auth/react";
 
 const sideBarHeader = {
   currentWorkSpace: "ACME Inc",
@@ -54,7 +56,9 @@ const sideBarHeader = {
     },
   ],
 };
-
+const handleSignOut = async () => {
+  await signOut();
+};
 // Menu items with proper URLs
 const items = [
   {
@@ -255,7 +259,7 @@ export function AppSidebar() {
                   <span>Billing</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <span>Sign out</span>
+                  <span onClick={handleSignOut}>Sign out</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
