@@ -50,12 +50,12 @@ export default function PublicLayout({
           >
             <Image
               src="/icons/google.svg"
-              alt="Google"
+              alt="Github"
               width={0}
               height={0}
               className="w-5 h-5"
             />
-            Continue with Google
+            Continue with Github
           </Button>
         </div>
       </div>

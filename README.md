@@ -74,3 +74,11 @@ I got tired of stitching together yet-another dashboard from scratch, so I built
 ## License
 
 MIT
+
+To add the auth secret
+
+run
+
+```code
+npx auth secret
+```
