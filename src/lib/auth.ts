@@ -1,26 +1,12 @@
 import NextAuth from "next-auth";
+import { PrismaAdapter } from "@auth/prisma-adapter";
 import Github from "next-auth/providers/github";
-import Credentials from "next-auth/providers/credentials";
-export const { auth, handlers, signIn, signOut } = NextAuth({
-  providers: [
-    Github,
-    Credentials({
-      credentials: {
-        email: {},
-        password: {},
-      },
-      authorize: async (credentials) => {
-        const email = "sup@email.com";
-        const password = "12345";
+import { prisma } from "./prisma";
 
-        if (credentials.email == email && credentials.password == password) {
-          return { email, password };
-        } else {
-          throw new Error("invalid credentials");
-        }
-      },
-    }),
-  ],
+const adapter = PrismaAdapter(prisma);
+export const { auth, handlers, signIn, signOut } = NextAuth({
+  adapter,
+  providers: [Github],
   pages: {
     signIn: "/login",
   },
