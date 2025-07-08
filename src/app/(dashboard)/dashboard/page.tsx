@@ -14,12 +14,16 @@ import { CalendarDateRangePicker } from "@/components/app/dashboard/date-range-p
 
 import { Overview } from "@/components/app/dashboard//overview";
 import { RecentSales } from "@/components/app/dashboard//recent-sales";
+import { auth } from "@/lib/auth";
 export const metadata: Metadata = {
   title: "Dashboard",
   description: "Example dashboard",
 };
 
 export default async function DashboardPage() {
+  const session = await auth();
+
+  console.log(session);
   return (
     <>
       <div className="md:hidden">
